@@ -13,6 +13,8 @@ import Link from "next/link";
 import GlobalFooter from "@/components/GlobalFooter";
 import "./index.css";
 import { menus } from "../../../config/menu";
+import {RootState} from "@/stores";
+import {useSelector} from "react-redux";
 
 const SearchInput = () => {
   const { token } = theme.useToken();
@@ -48,6 +50,8 @@ interface Props {
 }
 
 export default function BasicLayout({ children }: Props) {
+
+  const loginUser = useSelector((state: RootState) => state.loginUser);
   //获取当前页面的相对路径
   const pathname = usePathname();
   // const [num, setNum] = useState(40);
@@ -78,9 +82,9 @@ export default function BasicLayout({ children }: Props) {
           pathname,
         }}
         avatarProps={{
-          src: "https://gw.alipayobjects.com/zos/antfincdn/efFD%24IOql2/weixintupian_20170331104822.jpg",
+          src: loginUser.userAvatar || "/assets/logo.png",
           size: "small",
-          title: "zhaozhao",
+          title: loginUser.userName || "zhaozhao",
           render: (props, dom) => {
             return (
               <Dropdown
