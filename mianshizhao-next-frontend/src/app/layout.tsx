@@ -7,6 +7,8 @@ import {Provider, useDispatch} from "react-redux";
 import {getLoginUserUsingGet} from "@/api/userController";
 import {setLoginUser} from "@/stores/loginUser";
 import store, {AppDispatch} from "@/stores";
+import AccessLayout from "@/access/AccessLayout";
+import AccessEnum from "@/access/accessEnum";
 
 /**
  * 全局初始化逻辑
@@ -30,7 +32,11 @@ const InitLayout: React.FC<Readonly<{
         } else {
             //todo 测试代码
             setTimeout(() => {
-                const testUser = {userName: "测试登录", id: 1};
+                const testUser = {
+                    userName: "测试登录",
+                    id: 1,
+                    userRole: AccessEnum.ADMIN
+                };
                 dispatch(setLoginUser(testUser));
             },3000);
         }
@@ -56,7 +62,11 @@ export default function RootLayout({
         <AntdRegistry>
             <Provider store={store}>
                 <InitLayout>
-                    <BasicLayout>{children}</BasicLayout>
+                    <BasicLayout>
+                        <AccessLayout>
+                            {children}
+                        </AccessLayout>
+                    </BasicLayout>
                 </InitLayout>
             </Provider>
         </AntdRegistry>

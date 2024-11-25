@@ -15,6 +15,7 @@ import "./index.css";
 import { menus } from "../../../config/menu";
 import {RootState} from "@/stores";
 import {useSelector} from "react-redux";
+import getAccessibleMenus from "@/access/menuAccess";
 
 const SearchInput = () => {
   const { token } = theme.useToken();
@@ -133,7 +134,7 @@ export default function BasicLayout({ children }: Props) {
         onMenuHeaderClick={(e) => console.log(e)}
         // 定义有哪些菜单
         menuDataRender={() => {
-          return menus;
+          return getAccessibleMenus(loginUser,menus);
         }}
         //定义菜单项如何渲染
         menuItemRender={(item, dom) => (
