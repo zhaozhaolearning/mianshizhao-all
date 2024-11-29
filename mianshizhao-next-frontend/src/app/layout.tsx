@@ -30,15 +30,15 @@ const InitLayout: React.FC<Readonly<{
         if (res.data) {
 
         } else {
-            //todo 测试代码
-            setTimeout(() => {
-                const testUser = {
-                    userName: "测试登录",
-                    id: 1,
-                    userRole: AccessEnum.ADMIN
-                };
-                dispatch(setLoginUser(testUser));
-            },3000);
+            // 测试代码 模拟登录
+            // setTimeout(() => {
+            //     const testUser = {
+            //         userName: "测试登录",
+            //         id: 1,
+            //         userRole: AccessEnum.ADMIN
+            //     };
+            //     dispatch(setLoginUser(testUser));
+            // },3000);
         }
     }, []);
 

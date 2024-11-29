@@ -5,3 +5,6 @@
 .ant-pro-layout{
     height: 100%;
 }
+.ant-pro-global-header-header-actions-item.css-dev-only-do-not-override-gdagsw.ant-pro-global-header-header-actions-hover:last-of-type{
+    display: none;
+}
