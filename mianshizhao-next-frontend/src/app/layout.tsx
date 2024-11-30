@@ -28,6 +28,8 @@ const InitLayout: React.FC<Readonly<{
         // 获取用户信息
         const res = await getLoginUserUsingGet();
         if (res.data) {
+            // 保存用户登录状态
+            dispatch(setLoginUser(res.data as API.LoginUserVO));
 
         } else {
             // 测试代码 模拟登录

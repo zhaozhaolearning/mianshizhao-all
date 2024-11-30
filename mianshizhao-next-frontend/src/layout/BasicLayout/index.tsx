@@ -1,21 +1,20 @@
 "use client";
-import {
-    GithubFilled,
-    LogoutOutlined,
-    SearchOutlined,
-} from "@ant-design/icons";
+import {GithubFilled, LogoutOutlined, SearchOutlined,} from "@ant-design/icons";
 import {ProLayout} from "@ant-design/pro-components";
-import {Dropdown, Input, theme} from "antd";
-import React, {useState} from "react";
+import {Dropdown, Input, message, theme} from "antd";
+import React from "react";
 import Image from "next/image";
-import {usePathname} from "next/navigation";
+import {usePathname, useRouter} from "next/navigation";
 import Link from "next/link";
 import GlobalFooter from "@/components/GlobalFooter";
 import "./index.css";
 import {menus} from "../../../config/menu";
-import {RootState} from "@/stores";
-import {useSelector} from "react-redux";
+import {AppDispatch, RootState} from "@/stores";
+import {useDispatch, useSelector} from "react-redux";
 import getAccessibleMenus from "@/access/menuAccess";
+import {userLogoutUsingPost} from "@/api/userController";
+import {setLoginUser} from "@/stores/loginUser";
+import {DEFAULT_USER} from "@/constants/user";
 
 const SearchInput = () => {
     const {token} = theme.useToken();
@@ -61,6 +60,27 @@ export default function BasicLayout({children}: Props) {
     // }
 
 
+    const dispatch = useDispatch<AppDispatch>();
+
+    const router = useRouter();
+    /**
+     * 用户注销
+     */
+    const userLogout = async () => {
+        try {
+            await userLogoutUsingPost();
+            message.success("成功退出登录");
+            // 将登录状态放进全局存储管理
+            dispatch(setLoginUser(DEFAULT_USER));
+            // 将登录页替换为主页 push相当于新加了一个页面，点击返回返回上一个页面。
+            // replace相当于替代当前页面，点击返回返回欠一个页面
+            router.push("/user/login");
+        } catch (e) {
+            // @ts-ignore
+            message.error("操作失败" + e.message);
+        }
+    }
+
     return (
         <div
             id="basicLayout"
@@ -85,10 +105,21 @@ export default function BasicLayout({children}: Props) {
                     pathname,
                 }}
                 avatarProps={{
-                    src: loginUser.userAvatar || "/assets/logo.png",
+                    src: loginUser.userAvatar || "/assets/logo4.png",
                     size: "small",
                     title: loginUser.userName || "zhaozhao",
                     render: (props, dom) => {
+
+                        if (!loginUser.id) {
+                            return (
+                                <div onClick={() => {
+                                    router.push("/user/login");
+                                }}>
+                                    {dom}
+                                </div>
+                            )
+                        }
+
                         return (
                             <Dropdown
                                 menu={{
@@ -99,6 +130,13 @@ export default function BasicLayout({children}: Props) {
                                             label: "退出登录",
                                         },
                                     ],
+                                    onClick: async (event: { key: React.Key }) => {
+                                        const {key} = event;
+                                        if (key === "logout") {
+                                            // 由于不涉及其他的操作所以这里可以不加await
+                                            await userLogout();
+                                        }
+                                    }
                                 }}
                             >
                                 {dom}
